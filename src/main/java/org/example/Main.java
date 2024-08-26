@@ -1,9 +1,11 @@
 package org.example;
 
+import Windows.ClientGUI;
 import Windows.ServerWindow;
 
 public class Main {
     public static void main(String[] args) {
-            new ServerWindow();
+        ServerWindow serverWindow = new ServerWindow();
+        new ClientGUI(serverWindow);
         }
     }

@@ -20,11 +20,12 @@ public class ClientGUI extends JFrame {
     private final JTextField tfMessage = new JTextField();
     private final JButton btnSend = new JButton("Send");
 
-    public ClientGUI(){
+    public ClientGUI(ServerWindow serverWindow){
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(WIDTH, HEIGHT);
         setTitle("Чат клиента");
+        setLocationRelativeTo(serverWindow);
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);

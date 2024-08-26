@@ -30,11 +30,11 @@ public class ServerWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 isServerWorking = true;
-                System.out.println("Server stopped " + isServerWorking + "\n");
+                System.out.println("Server start " + isServerWorking + "\n");
             }
         });
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);//  Завершение приложения по закрытию окна
         setBounds(POS_X, POS_Y, WIDTH, HEIGHT);
         setResizable(false);
         setTitle("Chat server");
