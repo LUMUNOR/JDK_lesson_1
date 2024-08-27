@@ -12,9 +12,9 @@ public class ClientGUI extends JFrame {
     private String ipAddress;
     private String port;
     private String login;
-    private String password;
+    private char[] password;
 
-    private Boolean connect;
+    private Boolean connectServer;
 
     private final JTextArea log = new JTextArea();
 
@@ -35,7 +35,7 @@ public class ClientGUI extends JFrame {
         setSize(WIDTH, HEIGHT);
         setTitle("Чат клиента");
         setLocationRelativeTo(serverWindow);
-        connect = false;
+        connectServer = false;
 
         tfMessage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -54,8 +54,8 @@ public class ClientGUI extends JFrame {
                 ipAddress = tfIPAddress.getText();
                 port = tfPort.getText();
                 login = tfLogin.getText();
-                password = tfPassword.getText();
-                connect = true;
+                password = tfPassword.getPassword();
+                connectServer = true;
             }
         });
 
@@ -78,9 +78,15 @@ public class ClientGUI extends JFrame {
     }
 
     private void getTexInLog(){
-        if (tfMessage.getText() != null && !tfMessage.getText().trim().isEmpty()) {
-            log.append(tfMessage.getText()+"\n");
+        if (connectServer) {
+            if (tfMessage.getText() != null && !tfMessage.getText().trim().isEmpty()) {
+                log.append(login + ": " + tfMessage.getText() + "\n");
+                tfMessage.setText("");
+            } else tfMessage.setText("");
+        } else {
+            log.append("Client: Нет соединения с сервером!"+ "\n");
             tfMessage.setText("");
-        } else tfMessage.setText("");
+            }
+        }
     }
-}
+
