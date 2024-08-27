@@ -4,6 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class ServerWindow extends JFrame {
@@ -18,7 +24,8 @@ public class ServerWindow extends JFrame {
     private final JPanel panelBotton = new JPanel(new GridLayout(1,2));
 
     private boolean isServerWorking;
-    private ArrayList <ClientGUI> clients = new ArrayList<>();
+    private ArrayList <ClientGUI> clientsList = new ArrayList<>();
+    private StringBuffer history = new StringBuffer();
 
     public ServerWindow(){
         isServerWorking = false;
@@ -28,6 +35,8 @@ public class ServerWindow extends JFrame {
                 if (isServerWorking) {
                     isServerWorking = false;
                     log.append("*Server stopped*" + "\n");
+                    disconnectClients();
+                    writeLog();
                 }
             }
         });
@@ -38,6 +47,7 @@ public class ServerWindow extends JFrame {
                 if(!isServerWorking) {
                     isServerWorking = true;
                     log.append("*Server start*" + "\n");
+                    loadLog();
                 }
             }
         });
@@ -59,7 +69,48 @@ public class ServerWindow extends JFrame {
         setVisible(true);
     }
 
-    public void ConnectClient(ClientGUI client){
-       log.append()
+    public void connectClient(ClientGUI client){
+       log.append("Пльзователь " + client.getLogin() + " подключился" + "\n");
+       clientsList.add(client);
+       client.massageOnClienl(history.toString());
+    }
+
+    public void massageOnServer(String massage){
+        log.append(massage);
+        history.append(massage);
+        for (ClientGUI c : clientsList){
+            c.massageOnClienl(massage);
+        }
+    }
+
+    public Boolean statusServer(){
+        return isServerWorking;
+    }
+
+    private void disconnectClients(){
+        clientsList.clear();
+    }
+
+    private void loadLog (){
+        try
+        {
+            String result = Files.readString( Paths.get ("log.txt"));
+            history.append(result);
+            log.append(result);
+        }
+        catch(IOException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void writeLog(){
+        try( FileWriter writer = new FileWriter("log.txt",true))
+        {
+            writer.append(history.toString());
+            history.delete(0,history.length());
+        }
+        catch(IOException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 }

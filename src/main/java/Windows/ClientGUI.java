@@ -14,11 +14,13 @@ public class ClientGUI extends JFrame {
     private String login;
     private char[] password;
 
+    private ServerWindow serverWindow;
     private Boolean connectServer;
 
     private final JTextArea log = new JTextArea();
 
-    private final JPanel panelTop = new JPanel(new GridLayout(2,3));
+    private final JPanel panelTop = new JPanel(new GridLayout(1,1));
+    private final JPanel panelTop1 = new JPanel(new GridLayout(2,3));
     private final JTextField tfIPAddress = new JTextField("127.0.0.1");
     private final JTextField tfPort = new JTextField("8189");
     private final JTextField tfLogin = new JTextField();
@@ -35,6 +37,7 @@ public class ClientGUI extends JFrame {
         setSize(WIDTH, HEIGHT);
         setTitle("Чат клиента");
         setLocationRelativeTo(serverWindow);
+        this.serverWindow = serverWindow;
         connectServer = false;
 
         tfMessage.addActionListener(new ActionListener() {
@@ -51,19 +54,16 @@ public class ClientGUI extends JFrame {
 
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ipAddress = tfIPAddress.getText();
-                port = tfPort.getText();
-                login = tfLogin.getText();
-                password = tfPassword.getPassword();
-                connectServer = true;
+                connectToServer();
             }
         });
 
-        panelTop.add(tfIPAddress);
-        panelTop.add(tfPort);
-        panelTop.add(tfLogin);
-        panelTop.add(tfPassword);
-        panelTop.add(btnLogin);
+        panelTop1.add(tfIPAddress);
+        panelTop1.add(tfPort);
+        panelTop1.add(tfLogin);
+        panelTop1.add(tfPassword);
+        panelTop1.add(btnLogin);
+        panelTop.add(panelTop1);
         add(panelTop,BorderLayout.NORTH);
 
         panelBotton.add(tfMessage, BorderLayout.CENTER);
@@ -78,15 +78,45 @@ public class ClientGUI extends JFrame {
     }
 
     private void getTexInLog(){
-        if (connectServer) {
+        if (connectServer && serverWindow.statusServer()) {
             if (tfMessage.getText() != null && !tfMessage.getText().trim().isEmpty()) {
-                log.append(login + ": " + tfMessage.getText() + "\n");
+                serverWindow.massageOnServer(login + ": " + tfMessage.getText() + "\n");
                 tfMessage.setText("");
             } else tfMessage.setText("");
         } else {
             log.append("Client: Нет соединения с сервером!"+ "\n");
+            connectServer = false;
+            panelTop.add(panelTop1);
+            panelTop.revalidate();
+            panelTop.repaint();
             tfMessage.setText("");
             }
-        }
     }
+
+    public String getLogin(){
+        return this.login;
+    }
+
+    public void connectToServer(){
+        if (!connectServer && serverWindow.statusServer()){
+            this.ipAddress = tfIPAddress.getText();
+            this.port = tfPort.getText();
+            this.login = tfLogin.getText();
+            this.password = tfPassword.getPassword();
+            panelTop.removeAll();
+            panelTop.revalidate();
+            panelTop.repaint();
+            this.connectServer = true;
+            log.append("Client: Соединение с сервром установлено."+ "\n");
+            serverWindow.connectClient(this);
+        } else if (!serverWindow.statusServer()) log.append("Client: Cервер не доступен!"+ "\n");
+    }
+
+    public void massageOnClienl(String string){
+        log.append(string);
+    }
+
+}
+
+
 
