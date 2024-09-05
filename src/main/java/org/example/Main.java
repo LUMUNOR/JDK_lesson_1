@@ -1,12 +1,12 @@
 package org.example;
 
-import Windows.ClientGUI;
-import Windows.ServerWindow;
+import Client.ClientGUI;
+import Server.ServerGUI;
 
 public class Main {
     public static void main(String[] args) {
-        ServerWindow serverWindow = new ServerWindow();
-        new ClientGUI(serverWindow);
-        new ClientGUI(serverWindow);
+        ServerGUI serverGUI = new ServerGUI();
+        new ClientGUI(serverGUI);
+        new ClientGUI(serverGUI);
         }
     }

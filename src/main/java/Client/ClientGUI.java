@@ -1,4 +1,6 @@
-package Windows;
+package Client;
+
+import Server.ServerGUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +16,7 @@ public class ClientGUI extends JFrame {
     private String login;
     private char[] password;
 
-    private ServerWindow serverWindow;
+    private ServerGUI serverGUI;
     private Boolean connectServer;
 
     private final JTextArea log = new JTextArea();
@@ -31,13 +33,13 @@ public class ClientGUI extends JFrame {
     private final JTextField tfMessage = new JTextField();
     private final JButton btnSend = new JButton("Send");
 
-    public ClientGUI(ServerWindow serverWindow){
+    public ClientGUI(ServerGUI serverGUI){
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(WIDTH, HEIGHT);
         setTitle("Чат клиента");
-        setLocationRelativeTo(serverWindow);
-        this.serverWindow = serverWindow;
+        setLocationRelativeTo(serverGUI);
+        this.serverGUI = serverGUI;
         connectServer = false;
 
         tfMessage.addActionListener(new ActionListener() {
@@ -78,9 +80,9 @@ public class ClientGUI extends JFrame {
     }
 
     private void getTexInLog(){
-        if (connectServer && serverWindow.statusServer()) {
+        if (connectServer && serverGUI.statusServer()) {
             if (tfMessage.getText() != null && !tfMessage.getText().trim().isEmpty()) {
-                serverWindow.massageOnServer(login + ": " + tfMessage.getText() + "\n");
+                serverGUI.massageOnServer(login + ": " + tfMessage.getText() + "\n");
                 tfMessage.setText("");
             } else tfMessage.setText("");
         } else {
@@ -98,7 +100,7 @@ public class ClientGUI extends JFrame {
     }
 
     public void connectToServer(){
-        if (!connectServer && serverWindow.statusServer()){
+        if (!connectServer && serverGUI.statusServer()){
             this.ipAddress = tfIPAddress.getText();
             this.port = tfPort.getText();
             this.login = tfLogin.getText();
@@ -108,8 +110,8 @@ public class ClientGUI extends JFrame {
             panelTop.repaint();
             this.connectServer = true;
             log.append("Client: Соединение с сервром установлено."+ "\n");
-            serverWindow.connectClient(this);
-        } else if (!serverWindow.statusServer()) log.append("Client: Cервер не доступен!"+ "\n");
+            serverGUI.connectClient(this);
+        } else if (!serverGUI.statusServer()) log.append("Client: Cервер не доступен!"+ "\n");
     }
 
     public void massageOnClienl(String string){

@@ -1,18 +1,18 @@
-package Windows;
+package Server;
+
+import Client.ClientGUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class ServerWindow extends JFrame {
+public class ServerGUI extends JFrame {
     private static final int POS_X = 500;
     private static final int POS_Y = 550;
     private static final int WIDTH = 400;
@@ -27,7 +27,7 @@ public class ServerWindow extends JFrame {
     private ArrayList <ClientGUI> clientsList = new ArrayList<>();
     private StringBuffer history = new StringBuffer();
 
-    public ServerWindow(){
+    public ServerGUI(){
         isServerWorking = false;
         btnStop.addActionListener(new ActionListener() {
             @Override
