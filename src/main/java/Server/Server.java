@@ -28,17 +28,34 @@ public class Server {
         this.keeper = keeper;
     }
 
+    public void startWorking(){
+        if (!isServerWorking){
+            isServerWorking = true;
+            serverWindow.startServer();
+            loadLog();
+        }
+    }
+
+    public void stopWorking(){
+        if (isServerWorking) {
+            isServerWorking = false;
+            serverWindow.stopServer();
+            disconnectClients();
+            writeLog();
+        }
+    }
+
     public void connectClient(Client client){
-        log.append("Пльзователь " + client.getLogin() + " подключился" + "\n");
+        serverWindow.messageInLog("Пльзователь " + client.getLogin() + " подключился" + "\n");
         clientsList.add(client);
-        client.massageInLog(history.toString());
+        client.messageInLog(history.toString());
     }
 
     public void massageOnServer(String massage){
-        log.append(massage);
+        serverWindow.messageInLog(massage);
         history.append(massage);
-        for (ClientGUI c : clientsList){
-            c.massageInLog(massage);
+        for (Client c : clientsList){
+            c.messageInLog(massage);
         }
     }
 
@@ -47,29 +64,21 @@ public class Server {
     }
 
     private void disconnectClients(){
+        for (Client c : clientsList){
+            c.disconnect();
+        }
         clientsList.clear();
     }
 
     private void loadLog (){
-        try
-        {
-            String result = Files.readString( Paths.get ("log.txt"));
-            history.append(result);
-            log.append(result);
-        }
-        catch(IOException ex){
-            System.out.println(ex.getMessage());
-        }
+        String log = keeper.load();
+        history.append(log);
+        serverWindow.messageInLog(log);
     }
 
     private void writeLog(){
-        try( FileWriter writer = new FileWriter("log.txt",true))
-        {
-            writer.append(history.toString());
+        if (keeper.save(history.toString())) {
             history.delete(0,history.length());
-        }
-        catch(IOException ex){
-            System.out.println(ex.getMessage());
         }
     }
 }

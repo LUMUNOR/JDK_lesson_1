@@ -5,33 +5,30 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Repository {
+public class Repository implements Keeper {
 
     private static final String file = "log.txt";
 
     public String load (){
         try
         {
-            String result = Files.readString( Paths.get (file));
-            history.append(result);
-            log.append(result);
-            return result;
+            return Files.readString( Paths.get (file));
         }
         catch(IOException ex){
             System.out.println(ex.getMessage());
-            return null;
+            return "";
         }
     }
 
-    public Boolean save(){
-        try( FileWriter writer = new FileWriter(file,true))
+    public Boolean save(String log){
+        try( FileWriter writer = new FileWriter(file,false))
         {
-            writer.append(history.toString());
-            history.delete(0,history.length());
+            writer.append(log);
+            return true;
         }
         catch(IOException ex){
             System.out.println(ex.getMessage());
+            return false;
         }
-        return null;
     }
 }

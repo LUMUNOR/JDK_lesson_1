@@ -1,19 +1,14 @@
 package ServerGUI;
 
-import ClientGUI.ClientGUI;
 import Server.Server;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 
-public class ServerGUI extends JFrame {
+
+public class ServerGUI extends JFrame implements ServerWindow {
 
     private Server server;
 
@@ -31,23 +26,14 @@ public class ServerGUI extends JFrame {
         btnStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isServerWorking) {
-                    isServerWorking = false;
-                    log.append("*Server stopped*" + "\n");
-                    disconnectClients();
-                    writeLog();
-                }
+                server.stopWorking();
             }
         });
 
         btnStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!isServerWorking) {
-                    isServerWorking = true;
-                    log.append("*Server start*" + "\n");
-                    loadLog();
-                }
+                server.startWorking();
             }
         });
 
@@ -71,4 +57,18 @@ public class ServerGUI extends JFrame {
     public void setServer(Server server) {
         this.server = server;
     }
+
+    public void startServer(){
+        log.append("*Server start*" + "\n");
+    }
+
+    public void stopServer(){
+        log.setText("");
+        log.append("*Server stopped*" + "\n");
+    }
+
+    public void messageInLog(String message) {
+        log.append(message);
+    }
+
 }

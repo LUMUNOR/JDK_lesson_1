@@ -32,7 +32,7 @@ public class Client {
 
     public void pushText (String message){
         if (connectServer && server.working()) {
-            server.massageOnServer(this.login + ": " + message);
+            server.massageOnServer(this.login + ": " + message + "\n");
         } else disconnect();
     }
 

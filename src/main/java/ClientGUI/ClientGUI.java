@@ -97,6 +97,7 @@ public class ClientGUI extends JFrame implements ClientWindow {
         this.client.setPort(tfPort.getText());
         this.client.setLogin(tfLogin.getText());
         this.client.setPassword(tfPassword.getPassword());
+        log.setText("");
         log.append("Client: Соединение с сервром установлено."+ "\n");
     }
 
