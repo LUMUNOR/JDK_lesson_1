@@ -1,6 +1,7 @@
-package Server;
+package ServerGUI;
 
-import Client.ClientGUI;
+import ClientGUI.ClientGUI;
+import Server.Server;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +14,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class ServerGUI extends JFrame {
+
+    private Server server;
+
     private static final int POS_X = 500;
     private static final int POS_Y = 550;
     private static final int WIDTH = 400;
@@ -23,12 +27,7 @@ public class ServerGUI extends JFrame {
     private final JTextArea log = new JTextArea();
     private final JPanel panelBotton = new JPanel(new GridLayout(1,2));
 
-    private boolean isServerWorking;
-    private ArrayList <ClientGUI> clientsList = new ArrayList<>();
-    private StringBuffer history = new StringBuffer();
-
     public ServerGUI(){
-        isServerWorking = false;
         btnStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,48 +68,7 @@ public class ServerGUI extends JFrame {
         setVisible(true);
     }
 
-    public void connectClient(ClientGUI client){
-       log.append("Пльзователь " + client.getLogin() + " подключился" + "\n");
-       clientsList.add(client);
-       client.massageOnClienl(history.toString());
-    }
-
-    public void massageOnServer(String massage){
-        log.append(massage);
-        history.append(massage);
-        for (ClientGUI c : clientsList){
-            c.massageOnClienl(massage);
-        }
-    }
-
-    public Boolean statusServer(){
-        return isServerWorking;
-    }
-
-    private void disconnectClients(){
-        clientsList.clear();
-    }
-
-    private void loadLog (){
-        try
-        {
-            String result = Files.readString( Paths.get ("log.txt"));
-            history.append(result);
-            log.append(result);
-        }
-        catch(IOException ex){
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    private void writeLog(){
-        try( FileWriter writer = new FileWriter("log.txt",true))
-        {
-            writer.append(history.toString());
-            history.delete(0,history.length());
-        }
-        catch(IOException ex){
-            System.out.println(ex.getMessage());
-        }
+    public void setServer(Server server) {
+        this.server = server;
     }
 }

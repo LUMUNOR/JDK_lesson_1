@@ -1,4 +1,4 @@
-package Repository;
+package Server.Repository;
 
 public interface Keeper {
     Boolean save(String log);
